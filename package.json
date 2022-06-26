@@ -1,0 +1,36 @@
+{
+  "name": "choopoon",
+  "version": "1.0.0",
+  "description": "choopoon finds all the files matching a given condition and performs the given tasks on them",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --silent=false --watchAll --verbose"
+  },
+  "keywords": [
+    "scan",
+    "find",
+    "modules"
+  ],
+  "files": [
+    "LICENSE",
+    "Readme.md",
+    "index.js"
+  ],
+  "author": {
+    "name": "Mohsen Dorparasti",
+    "email": "dorparasti@gmail.com"
+  },
+  "homepage": "https://github.com/mohsen-d/choopoon",
+  "bugs": {
+    "url": "https://github.com/mohsen-d/choopoon/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohsen-d/choopoon.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^28.1.1",
+    "ajab": "^1.1.0"
+  }
+}
