@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  return res.status(200).send("choopoon");
+router.get("/:testing", (req, res) => {
+  return req.mws
+    ? res.status(200).send(req.mws.join(" "))
+    : res.status(200).send("choopoon");
 });
 
 module.exports = router;

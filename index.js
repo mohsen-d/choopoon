@@ -30,10 +30,30 @@ function gatherAllFiles(folderPath, selectionFilter) {
 
 module.exports.addRoutes = function (app, routesPath, options = {}) {
   const routesFiles = gatherAllFiles(routesPath, options.selectionFilter);
+  const routesUrls = [];
   const baseUrl = options.baseUrl ? options.baseUrl : "/";
   for (const routeFile of routesFiles) {
     const routeUrl = baseUrl + path.basename(routeFile, ".js");
     const route = require(routeFile);
     app.use(routeUrl, route);
+    routesUrls.push(routeUrl);
   }
+
+  return routesUrls;
+};
+
+module.exports.addMiddlewares = function (app, filesPath, options = {}) {
+  const middlewaresFiles = gatherAllFiles(filesPath, options.selectionFilter);
+  const middlewares = [];
+
+  if (options.sortFunction) middlewaresFiles.sort(options.sortFunction);
+  else middlewaresFiles.sort();
+
+  for (const middlewareFile of middlewaresFiles) {
+    const middleware = require(middlewareFile);
+    app.use(middleware);
+    middlewares.push(path.basename(middlewareFile, ".js"));
+  }
+
+  return middlewares;
 };
