@@ -4,7 +4,7 @@
   "description": "choopoon finds all the files matching a given condition and performs the given tasks on them",
   "main": "index.js",
   "scripts": {
-    "test": "jest --silent=false --watchAll --verbose"
+    "test": "jest --silent=false"
   },
   "keywords": [
     "scan",
@@ -30,7 +30,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "ajab": "^1.1.0",
+    "@types/jest": "^28.1.3",
+    "ajab": "^1.1.2",
     "express": "^4.18.1",
     "jest": "^28.1.1",
     "supertest": "^6.2.3"
