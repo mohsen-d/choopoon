@@ -1,15 +1,18 @@
 {
   "name": "choopoon",
-  "version": "1.0.0",
-  "description": "choopoon finds all the files matching a given condition and performs the given tasks on them",
+  "version": "1.0.1",
+  "description": "choopoon finds all the routes/middlewares in a given path and adds them to expressjs app",
   "main": "index.js",
   "scripts": {
     "test": "jest --silent=false"
   },
   "keywords": [
-    "scan",
-    "find",
-    "modules"
+    "modules",
+    "expressjs",
+    "routes",
+    "middleware",
+    "router",
+    "pipeline"
   ],
   "files": [
     "LICENSE",
