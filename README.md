@@ -25,15 +25,15 @@ For example, if you save your routes in a folder named `routes`, the code below 
 
 `addRoutes()` accepts an optional third parameter in which one can define:
 
-- a `selectionFunction`
+- a `selectionFilter`
 
-      choopoon.addRoutes(app, "./pipeline", {selectionFunction: (f) => f.startsWith("route")});
+      choopoon.addRoutes(app, "./pipeline", {selectionFilter: (f) => f.startsWith("route")});
 
 - a `baseUrl`
 
       choopoon.addRoutes(app, "./routes", {baseUrl: "/api/"});
 
-`addMiddlewares()` third parameter accepts `selectionFunction` and `sortFunction`. By default it uses `Array.sort()` if a `sortFunction` is not provided.
+`addMiddlewares()` third parameter accepts `selectionFilter` and `sortFunction`. By default it uses `Array.sort()` if a `sortFunction` is not provided.
 
 Both functions return an array of `routes` or `middlewares` they have found.
 
