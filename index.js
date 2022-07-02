@@ -34,7 +34,7 @@ module.exports.addRoutes = function (app, routesPath, options = {}) {
   const baseUrl = options.baseUrl ? options.baseUrl : "/";
   for (const routeFile of routesFiles) {
     const routeUrl = baseUrl + path.basename(routeFile, ".js");
-    const route = require(routeFile);
+    const route = require.main.require(routeFile);
     app.use(routeUrl, route);
     routesUrls.push(routeUrl);
   }
@@ -50,7 +50,7 @@ module.exports.addMiddlewares = function (app, filesPath, options = {}) {
   else middlewaresFiles.sort();
 
   for (const middlewareFile of middlewaresFiles) {
-    const middleware = require(middlewareFile);
+    const middleware = require.main.require(middlewareFile);
     app.use(middleware);
     middlewares.push(path.basename(middlewareFile, ".js"));
   }
