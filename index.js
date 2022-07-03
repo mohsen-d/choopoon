@@ -13,15 +13,17 @@ function gatherAllFiles(folderPath, selectionFilter) {
 
   let folderContent = fs.readdirSync(fullPath);
 
-  for (const f of folderContent)
-    if (isFile(f)) files.push(folderPath + "/" + f);
-    else {
+  for (const f of folderContent) {
+    if (isFile(f)) {
+      files.push(folderPath + "/" + f);
+    } else {
       const subFolderFiles = gatherAllFiles(
         folderPath + "/" + f,
         selectionFilter
       );
       if (subFolderFiles.length > 0) files.push(subFolderFiles);
     }
+  }
 
   if (selectionFilter) files = files.filter(selectionFilter);
 
@@ -33,7 +35,8 @@ module.exports.addRoutes = function (app, routesPath, options = {}) {
   const routesUrls = [];
   const baseUrl = options.baseUrl ? options.baseUrl : "/";
   for (const routeFile of routesFiles) {
-    const routeUrl = baseUrl + path.basename(routeFile, ".js");
+    const routeUrl = makeRouteUrl(baseUrl, routesPath, routeFile);
+
     const route = require.main.require(routeFile);
     app.use(routeUrl, route);
 
@@ -58,3 +61,9 @@ module.exports.addMiddlewares = function (app, filesPath, options = {}) {
 
   return middlewares;
 };
+
+function makeRouteUrl(baseUrl, routesPath, routeFile) {
+  const fileName = path.basename(routeFile, ".js");
+  const fileUrl = path.dirname(routeFile).replace(routesPath, "");
+  return path.posix.join(baseUrl, fileUrl, fileName);
+}

@@ -2,6 +2,10 @@
 
 choopoon gets all the defined `routes` or `middlewares` in a given path and adds them to the expressjs app.
 
+## Bug Fixed
+
+There has been a bug with routes/middlewares folder's path in previous versions which led to routes/middlewares not being found by module. The bug is fixed in version 1.0.5;
+
 ## installing
 
 to install run `npm i choopoon` in terminal

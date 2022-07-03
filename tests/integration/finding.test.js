@@ -1,33 +1,62 @@
 const choopoon = require("../../index");
-const request = require("supertest");
-let server;
 
-beforeAll(() => {
-  server = require("./app");
-});
+describe("addRoutes() finding routes", () => {
+  let app;
 
-afterAll(() => {
-  server.close();
-});
+  beforeEach(() => {
+    app = new (function () {
+      this.routes = [];
+      this.use = function (url, route) {
+        this.routes.push({ url: url, route: route });
+      };
+    })();
+  });
 
-describe("addRoutes() serving requests", () => {
-  it("should serve /route with success", async () => {
-    const res = await request(server).get("/route/testingroutes");
-    expect(res.status).toBe(200);
-    expect(res.text).toBe("choopoon");
+  it("should add routes to app", () => {
+    choopoon.addRoutes(app, "./routes");
+    expect(app.routes.length).toBe(2);
+    expect(app.routes[0].url).toBe("/admin/route");
+    expect(app.routes[1].url).toBe("/route");
+  });
+
+  it("should append baseUrl to routes' urls", () => {
+    choopoon.addRoutes(app, "./routes", { baseUrl: "/api/" });
+    expect(app.routes.length).toBe(2);
+    expect(app.routes[0].url).toBe("/api/admin/route");
+    expect(app.routes[1].url).toBe("/api/route");
+  });
+
+  it("should return list of routes found", () => {
+    const list = choopoon.addRoutes(app, "./routes", {
+      baseUrl: "/api/",
+    });
+    expect(list.length).toBe(2);
+    expect(list[0]).toBe("/api/admin/route");
+    expect(list[1]).toBe("/api/route");
   });
 });
 
-describe("addMiddlewares() serving requests", () => {
-  it("should block the request", async () => {
-    const res = await request(server).get("/route/testingmiddlewares");
-    expect(res.status).toBe(403);
-    expect(res.text).toBe("blocked by middleware");
+describe("addMiddlewares() findind middlewares", () => {
+  let app;
+
+  beforeEach(() => {
+    app = new (function () {
+      this.middlewares = [];
+      this.use = function (mw) {
+        this.middlewares.push(mw);
+      };
+    })();
   });
 
-  it("should sort then add middlewares", async () => {
-    const res = await request(server).get("/route/sorting");
-    expect(res.status).toBe(200);
-    expect(res.text).toBe("first second");
+  it("should add middlewares to app's pipeline", () => {
+    choopoon.addMiddlewares(app, "./middlewares");
+    expect(app.middlewares.length).toBe(3);
+  });
+
+  it("should return list of middlewares found", () => {
+    const list = choopoon.addMiddlewares(app, "./middlewares");
+    expect(list[0]).toBe("0_middleware");
+    expect(list[1]).toBe("1_middleware");
+    expect(list[2]).toBe("middleware");
   });
 });

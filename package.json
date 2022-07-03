@@ -1,6 +1,6 @@
 {
   "name": "choopoon",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "choopoon finds all the routes/middlewares in a given path and adds them to expressjs app",
   "main": "index.js",
   "scripts": {
