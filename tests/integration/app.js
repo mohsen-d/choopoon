@@ -3,11 +3,11 @@ const choopoon = require("../../index");
 
 const app = express();
 
-choopoon.addMiddlewares(app, "./tests/integration/middlewares");
-choopoon.addRoutes(app, "./tests/integration/routes");
+choopoon.addMiddlewares(app, "./middlewares");
+choopoon.addRoutes(app, "./routes");
 
-const server = app.listen(3001, () => {
-  console.log("listening on port 3001");
+const server = app.listen(3010, () => {
+  console.log("listening on port 3010");
 });
 
 module.exports = server;

@@ -4,7 +4,7 @@ const path = require("path");
 function gatherAllFiles(folderPath, selectionFilter) {
   let files = [];
 
-  const fullPath = path.resolve(folderPath);
+  const fullPath = path.resolve(require.main.path, folderPath);
 
   const isFile = (f) => {
     const filePath = fullPath + "\\" + f;
@@ -36,6 +36,7 @@ module.exports.addRoutes = function (app, routesPath, options = {}) {
     const routeUrl = baseUrl + path.basename(routeFile, ".js");
     const route = require.main.require(routeFile);
     app.use(routeUrl, route);
+
     routesUrls.push(routeUrl);
   }
 
