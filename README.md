@@ -27,18 +27,35 @@ For example, if you save your routes in a folder named `routes`, the code below 
 
     choopoon.addRoutes(app, "./routes");
 
-`addRoutes()` accepts an optional third parameter in which one can define:
+`addRoutes()` and `addMiddlewares()` accept a third optional parameter in which one can define:
 
-- a `selectionFilter`
+- a `selectionFilter` (both)
 
       choopoon.addRoutes(app, "./pipeline", {selectionFilter: (f) => f.startsWith("route")});
 
-- a `baseUrl`
+- a `baseUrl` (only `addRoutes()`)
 
       choopoon.addRoutes(app, "./routes", {baseUrl: "/api/"});
 
-`addMiddlewares()` third parameter accepts `selectionFilter` and `sortFunction`. By default it uses `Array.sort()` if a `sortFunction` is not provided.
+- a `sortFunction` (only `addMiddlewares`)
 
-Both functions return an array of `routes` or `middlewares` they have found.
+      If not provided, `Array.sort()` is used by default.
 
-    const routes = choopoon.addRoutes(app, "./routes");
+### sorting middlewares
+
+`sortFunction` is used to sort middleware files. For example, by default a file named `auth.js` will be placed before `logging.js`. To change this, one solution is to prefix files with numbers e.g. `0_logging.js` will come before `1_auth.js`.
+
+Note that If a single file includes more than one middleware function, `sortFunction` won't be applied to them and they'll be added to pipeline from top to bottom.
+
+### return value
+
+Both functions return an array of names of `routes` or `middlewares` they have found.
+If `./routes` contains `posts.js`, `profile.js` and `admin/posts.js` files then :
+
+    const routes = choopoon.addRoutes(app, "./routes", {baseUrl: "/api/"});
+    console.log(routes);
+    /* expecting output:
+       /api/posts
+       /api/profile
+       /api/admin/posts
+    */

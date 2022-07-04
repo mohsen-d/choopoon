@@ -54,9 +54,17 @@ module.exports.addMiddlewares = function (app, filesPath, options = {}) {
   else middlewaresFiles.sort();
 
   for (const middlewareFile of middlewaresFiles) {
-    const middleware = require.main.require(middlewareFile);
-    app.use(middleware);
-    middlewares.push(path.basename(middlewareFile, ".js"));
+    const moduleExports = require.main.require(middlewareFile);
+
+    if (typeof moduleExports === "function") {
+      app.use(moduleExports);
+      middlewares.push(path.basename(middlewareFile, ".js"));
+    } else if (typeof moduleExports === "object") {
+      for (const middlewareName of Object.keys(moduleExports)) {
+        app.use(moduleExports[middlewareName]);
+        middlewares.push(middlewareName);
+      }
+    }
   }
 
   return middlewares;

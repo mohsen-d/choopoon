@@ -50,13 +50,14 @@ describe("addMiddlewares() findind middlewares", () => {
 
   it("should add middlewares to app's pipeline", () => {
     choopoon.addMiddlewares(app, "./middlewares");
-    expect(app.middlewares.length).toBe(3);
+    expect(app.middlewares.length).toBe(5);
   });
 
   it("should return list of middlewares found", () => {
     const list = choopoon.addMiddlewares(app, "./middlewares");
     expect(list[0]).toBe("0_middleware");
     expect(list[1]).toBe("1_middleware");
-    expect(list[2]).toBe("middleware");
+    expect(list[2]).toBe("thirdMiddleware");
+    expect(list[3]).toBe("forthMiddleware");
   });
 });

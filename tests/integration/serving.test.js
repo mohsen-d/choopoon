@@ -25,9 +25,9 @@ describe("addMiddlewares() serving requests", () => {
     expect(res.text).toBe("blocked by middleware");
   });
 
-  it("should sort then add middlewares", async () => {
+  it("should sort (A->Z) then add middlewares", async () => {
     const res = await request(server).get("/route/sorting");
     expect(res.status).toBe(200);
-    expect(res.text).toBe("first second");
+    expect(res.text).toBe("first second third forth");
   });
 });
