@@ -70,6 +70,30 @@ module.exports.addMiddlewares = function (app, filesPath, options = {}) {
   return middlewares;
 };
 
+module.exports.addTo = function (filesPath, callback, options = {}) {
+  const files = gatherAllFiles(filesPath, options.selectionFilter);
+  const output = [];
+
+  if (options.sortFunction) files.sort(options.sortFunction);
+  else files.sort();
+
+  for (const file of files) {
+    const moduleExports = require.main.require(file);
+
+    if (typeof moduleExports === "function") {
+      callback(moduleExports);
+      output.push(path.basename(file));
+    } else if (typeof moduleExports === "object") {
+      for (const key of Object.keys(moduleExports)) {
+        callback(moduleExports[key]);
+        output.push(key);
+      }
+    }
+  }
+
+  return output;
+};
+
 function makeRouteUrl(baseUrl, routesPath, routeFile) {
   const fileName = path.basename(routeFile, ".js");
   const fileUrl = path.dirname(routeFile).replace(routesPath, "");

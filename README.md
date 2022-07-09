@@ -1,6 +1,6 @@
 # choopoon
 
-choopoon gets all the defined `routes` or `middlewares` in a given path and adds them to the expressjs app.
+choopoon helps not to manually importing and adding multiple files (routes, middlewares or ...) into your application.
 
 ## Bug Fixed
 
@@ -12,11 +12,13 @@ to install run `npm i choopoon` in terminal
 
 ## using
 
-choopoon offers 2 methods:
+choopoon offers 3 methods:
 
     addRoutes(app, path, options);
 
     addMiddlewares(app, path, options);
+
+    addTo(path, callback, options);
 
 For example, if you save your routes in a folder named `routes`, the code below adds automatically all the routes to your app:
 
@@ -27,9 +29,9 @@ For example, if you save your routes in a folder named `routes`, the code below 
 
     choopoon.addRoutes(app, "./routes");
 
-`addRoutes()` and `addMiddlewares()` accept a third optional parameter in which one can define:
+All the methods accept a third optional parameter in which one can define:
 
-- a `selectionFilter` (both)
+- a `selectionFilter` (all)
 
       choopoon.addRoutes(app, "./pipeline", {selectionFilter: (f) => f.startsWith("route")});
 
@@ -37,19 +39,19 @@ For example, if you save your routes in a folder named `routes`, the code below 
 
       choopoon.addRoutes(app, "./routes", {baseUrl: "/api/"});
 
-- a `sortFunction` (only `addMiddlewares`)
+- a `sortFunction` (`addMiddlewares` and `addTo`)
 
       If not provided, `Array.sort()` is used by default.
 
-### sorting middlewares
+### sorting
 
-`sortFunction` is used to sort middleware files. For example, by default a file named `auth.js` will be placed before `logging.js`. To change this, one solution is to prefix files with numbers e.g. `0_logging.js` will come before `1_auth.js`.
+`sortFunction` is used to sort files found. For example, by default a file named `auth.js` will be placed before `logging.js`. To change this, one solution is to prefix files with numbers e.g. `0_logging.js` will come before `1_auth.js`.
 
-Note that If a single file includes more than one middleware function, `sortFunction` won't be applied to them and they'll be added to pipeline from top to bottom.
+Note that If `module.exports` is an object, `sortFunction` won't be applied to exported objects and they'll be handled from top to bottom.
 
 ### return value
 
-Both functions return an array of names of `routes` or `middlewares` they have found.
+All functions return an array of names of `routes`, `middlewares` or `files` they have found.
 If `./routes` contains `posts.js`, `profile.js` and `admin/posts.js` files then :
 
     const routes = choopoon.addRoutes(app, "./routes", {baseUrl: "/api/"});
@@ -59,3 +61,44 @@ If `./routes` contains `posts.js`, `profile.js` and `admin/posts.js` files then 
        /api/profile
        /api/admin/posts
     */
+
+## addTo example
+
+Imagine there is a main module:
+
+    const math = {};
+
+    module.exports = math;
+
+but implementing its methods such as `sum` or `sub` shall be done later by others.
+choopoon allows developers to implement methods in seperate files without manipulating the main madule.
+They can put files in a certain folder, say `methods`.
+
+for example, `sum.js` :
+
+    module.exports = function(){
+      return {
+            sum: (a, b) => a + b;
+      }
+    }
+
+or `sub.js`:
+
+    module.exports = function(){
+      return {
+            sub: (a, b) => a - b;
+      }
+    }
+
+Then all we need to do is to have main module to find and get all the files and import the methods:
+
+    const choopoon = require("choopoon");
+
+    const math = {};
+
+    choopoon.addTo("./methods", f => {
+      const methods = f();
+      Object.keys(methods).forEach(m => math[m] = methods[m]);
+    });
+
+    module.exports = math;
